@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyToDoApp</string>
+    <string name="enter_text_hint">Enter Text</string>
 </resources>
