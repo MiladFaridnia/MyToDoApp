@@ -1,12 +1,17 @@
 package com.faridnia.mytodoapp.ui.task
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.faridnia.mytodoapp.R
 import com.faridnia.mytodoapp.databinding.FragmentTaskListBinding
+import com.faridnia.mytodoapp.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -25,12 +30,44 @@ class TaskFragment : Fragment(R.layout.fragment_task_list) {
         binding.tasksRecyclerView.apply {
             adapter = taskAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true  )
+            setHasFixedSize(true)
         }
 
-        viewModel.tasks.observe(viewLifecycleOwner){
+        viewModel.tasks.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
 
+        setHasOptionsMenu(true)
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_fragment_tasks, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+
+        searchView.onQueryTextChanged {
+            //search item in repo
+        }
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_sort_by_create_date -> {
+                true
+            }
+            R.id.action_sort_by_name -> {
+                true
+            }
+            R.id.action_hide_completed -> {
+                true
+            }
+            R.id.action_delete_all_completed -> {
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
