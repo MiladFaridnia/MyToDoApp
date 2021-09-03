@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.faridnia.mytodoapp.R
 import com.faridnia.mytodoapp.data.SortOrder
+import com.faridnia.mytodoapp.data.Task
 import com.faridnia.mytodoapp.databinding.FragmentTaskListBinding
 import com.faridnia.mytodoapp.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class TaskFragment : Fragment(R.layout.fragment_task_list) {
+class TaskFragment : Fragment(R.layout.fragment_task_list) , TasksAdapter.OnTaskItemClicked {
 
     private val viewModel: TaskViewModel by viewModels()
 
@@ -29,7 +30,7 @@ class TaskFragment : Fragment(R.layout.fragment_task_list) {
 
         val binding = FragmentTaskListBinding.bind(view)
 
-        val taskAdapter = TasksAdapter()
+        val taskAdapter = TasksAdapter(this)
 
         binding.tasksRecyclerView.apply {
             adapter = taskAdapter
@@ -91,5 +92,13 @@ class TaskFragment : Fragment(R.layout.fragment_task_list) {
             else -> super.onOptionsItemSelected(item)
 
         }
+    }
+
+    override fun onItemClick(task: Task) {
+
+    }
+
+    override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
+        viewModel.onTaskItemCheckChanged(task,isChecked)
     }
 }
