@@ -12,11 +12,11 @@ interface TaskDao {
 
     fun getTasks(
         queryString: String,
-        sortOrder: TaskViewModel.SortOrder,
+        sortOrder: SortOrder,
         hideCompleted: Boolean
     ): Flow<List<Task>> = when (sortOrder) {
-        TaskViewModel.SortOrder.BY_NAME -> getTasksSortedByName(queryString, hideCompleted)
-        TaskViewModel.SortOrder.BY_DATE -> getTasksSortedByDate(queryString, hideCompleted)
+        SortOrder.BY_NAME -> getTasksSortedByName(queryString, hideCompleted)
+        SortOrder.BY_DATE -> getTasksSortedByDate(queryString, hideCompleted)
     }
 
     @Query("SELECT * FROM task_table WHERE (isCompleted != :hideCompleted OR isCompleted = 0) AND name LIKE  '%' || :queryString || '%' ORDER BY isImportant,name DESC ")
