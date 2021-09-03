@@ -3,40 +3,47 @@ package com.faridnia.mytodoapp.ui.task
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.faridnia.mytodoapp.data.PreferencesManager
+import com.faridnia.mytodoapp.data.SortOrder
 import com.faridnia.mytodoapp.data.TaskDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 
 class TaskViewModel @ViewModelInject constructor(
-    private val taskDao: TaskDao
+    private val taskDao: TaskDao,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
     val searchQuery = MutableStateFlow("")
 
-    val sortOrder = MutableStateFlow(SortOrder.BY_NAME)
-    val hideCompleted = MutableStateFlow(false)
+    val preferencesFlow = preferencesManager.preferenceFlow
 
     private val taskFlow = combine(
         searchQuery,
-        sortOrder,
-        hideCompleted
+        preferencesFlow
     )
-    { query, sortOrder, hideCompleted ->
+    { query, filterPreferences ->
 
-        Triple(query, sortOrder, hideCompleted)
+        Pair(query, filterPreferences)
 
-    }.flatMapLatest { (query, sortOrder, hideCompleted) ->
+    }.flatMapLatest { (query, filterPreferences) ->
 
-        taskDao.getTasks(query, sortOrder, hideCompleted)
+        taskDao.getTasks(query, filterPreferences.sortOrder, filterPreferences.hideCompleted)
 
+    }
+
+    fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
+        preferencesManager.updateSortOrder(sortOrder)
+    }
+
+    fun onHideCompletedSelected(hideCompleted: Boolean) = viewModelScope.launch {
+        preferencesManager.updateHideCompleted(hideCompleted)
     }
 
     val tasks = taskFlow.asLiveData()
 
-    enum class SortOrder {
-        BY_NAME,
-        BY_DATE
-    }
 
 }
