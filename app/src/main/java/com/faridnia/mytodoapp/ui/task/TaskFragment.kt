@@ -17,7 +17,9 @@ import com.faridnia.mytodoapp.data.SortOrder
 import com.faridnia.mytodoapp.data.Task
 import com.faridnia.mytodoapp.databinding.FragmentTaskListBinding
 import com.faridnia.mytodoapp.util.onQueryTextChanged
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -69,8 +71,26 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
             taskAdapter.submitList(it)
         }
 
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.taskEventFlow.collect { event ->
+                when (event) {
+                    is TaskViewModel.TaskEvent.ShowUndoDeleteTaskMessage -> {
+                        showSnakeBar(event)
+                    }
+                }
+            }
+        }
+
+
         setHasOptionsMenu(true)
 
+    }
+
+    private fun showSnakeBar(event: TaskViewModel.TaskEvent.ShowUndoDeleteTaskMessage) {
+        Snackbar.make(requireView(), "Task Deleted", Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+                viewModel.onUndoDeleteClicked(event.task)
+            }.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
