@@ -50,6 +50,10 @@ class TaskViewModel @ViewModelInject constructor(
         }
     }
 
+    fun onTaskSwiped(task: Task) = viewModelScope.launch {
+        taskDao.delete(task)
+    }
+
     val tasks = taskFlow.asLiveData()
 
 
