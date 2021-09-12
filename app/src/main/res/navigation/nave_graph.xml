@@ -8,6 +8,24 @@
     <fragment
         android:id="@+id/taskFragment"
         android:name="com.faridnia.mytodoapp.ui.task.TaskFragment"
-        android:label="fragment_task_list"
-        tools:layout="@layout/fragment_task_list" />
+        android:label="Tasks"
+        tools:layout="@layout/fragment_task_list">
+        <action
+            android:id="@+id/action_taskFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditTaskFragment"
+        android:name="com.faridnia.mytodoapp.ui.addedit.AddEditTaskFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_save_task" >
+        <argument
+            android:name="task"
+            app:argType="com.faridnia.mytodoapp.data.Task"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>

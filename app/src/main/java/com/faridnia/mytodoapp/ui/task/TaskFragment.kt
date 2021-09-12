@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import com.faridnia.mytodoapp.R
 import com.faridnia.mytodoapp.data.SortOrder
 import com.faridnia.mytodoapp.data.Task
 import com.faridnia.mytodoapp.databinding.FragmentTaskListBinding
+import com.faridnia.mytodoapp.util.exhaustive
 import com.faridnia.mytodoapp.util.onQueryTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,6 +67,9 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
 
             touchHelper.attachToRecyclerView(tasksRecyclerView)
 
+            addTaskFloatingActionButton.setOnClickListener {
+                viewModel.onAddNewTaskClicked()
+            }
         }
 
         viewModel.tasks.observe(viewLifecycleOwner) {
@@ -77,7 +82,15 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
                     is TaskViewModel.TaskEvent.ShowUndoDeleteTaskMessage -> {
                         showSnakeBar(event)
                     }
-                }
+                    is TaskViewModel.TaskEvent.ShowAddTaskFragment -> {
+                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(null,"New Task")
+                        findNavController().navigate(action)
+                    }
+                    is TaskViewModel.TaskEvent.ShowEditTaskFragment -> {
+                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(event.task , "Edit Task")
+                        findNavController().navigate(action)
+                    }
+                }.exhaustive
             }
         }
 
@@ -142,7 +155,7 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
     }
 
     override fun onItemClick(task: Task) {
-
+        viewModel.onTaskSelected(task)
     }
 
     override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
