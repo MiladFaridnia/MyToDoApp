@@ -65,11 +65,22 @@ class TaskViewModel @ViewModelInject constructor(
         taskDao.insert(task)
     }
 
+    fun onAddNewTaskClicked() = viewModelScope.launch {
+        taskEventChannel.send(TaskEvent.ShowAddTaskFragment)
+    }
+
+    fun onTaskSelected(task: Task) = viewModelScope.launch {
+        taskEventChannel.send(TaskEvent.ShowEditTaskFragment(task))
+    }
+
     val tasks = taskFlow.asLiveData()
 
 
     sealed class TaskEvent {
+        object ShowAddTaskFragment : TaskEvent()
+        data class ShowEditTaskFragment(val task: Task) : TaskEvent()
         data class ShowUndoDeleteTaskMessage(val task: Task) : TaskEvent()
+
     }
 
 }
