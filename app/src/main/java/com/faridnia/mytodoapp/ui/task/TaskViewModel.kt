@@ -4,6 +4,8 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.faridnia.mytodoapp.RESULT_ADD_OK
+import com.faridnia.mytodoapp.RESULT_EDIT_OK
 import com.faridnia.mytodoapp.data.PreferencesManager
 import com.faridnia.mytodoapp.data.SortOrder
 import com.faridnia.mytodoapp.data.Task
@@ -73,11 +75,23 @@ class TaskViewModel @ViewModelInject constructor(
         taskEventChannel.send(TaskEvent.ShowEditTaskFragment(task))
     }
 
+    fun onAddEditResult(result: Int) {
+        when(result){
+            RESULT_ADD_OK -> showTaskConfirmationMessage("Task Added")
+            RESULT_EDIT_OK -> showTaskConfirmationMessage("Task Updated")
+        }
+    }
+
+    private fun showTaskConfirmationMessage(message: String) =viewModelScope.launch {
+        taskEventChannel.send(TaskEvent.ShowTaskSavedConfirmationMessage(message))
+    }
+
     val tasks = taskFlow.asLiveData()
 
 
     sealed class TaskEvent {
         object ShowAddTaskFragment : TaskEvent()
+        data class ShowTaskSavedConfirmationMessage(val message: String) : TaskEvent()
         data class ShowEditTaskFragment(val task: Task) : TaskEvent()
         data class ShowUndoDeleteTaskMessage(val task: Task) : TaskEvent()
 
