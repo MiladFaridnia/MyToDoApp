@@ -18,14 +18,21 @@
         android:id="@+id/addEditTaskFragment"
         android:name="com.faridnia.mytodoapp.ui.addedit.AddEditTaskFragment"
         android:label="{title}"
-        tools:layout="@layout/fragment_save_task" >
+        tools:layout="@layout/fragment_save_task">
         <argument
             android:name="task"
+            android:defaultValue="@null"
             app:argType="com.faridnia.mytodoapp.data.Task"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="title"
             app:argType="string" />
     </fragment>
+    <dialog
+        android:id="@+id/deleteAllCompletedTaskDialogFragment"
+        android:name="com.faridnia.mytodoapp.ui.deletallcompeleted.DeleteAllCompletedTaskDialogFragment"
+        android:label="DeleteAllCompletedTaskDialogFragment" />
+    <action
+        android:id="@+id/action_global_deleteAllCompletedTaskDialogFragment"
+        app:destination="@id/deleteAllCompletedTaskDialogFragment" />
 </navigation>
