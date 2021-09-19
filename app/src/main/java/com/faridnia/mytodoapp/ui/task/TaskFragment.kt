@@ -32,6 +32,8 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
 
     private val viewModel: TaskViewModel by viewModels()
 
+    private lateinit var searchView: SearchView
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -106,7 +108,8 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
                     }
                     is TaskViewModel.TaskEvent.ShowDeleteAllCompletedScreen -> {
-                        val action = TaskFragmentDirections.actionGlobalDeleteAllCompletedTaskDialogFragment()
+                        val action =
+                            TaskFragmentDirections.actionGlobalDeleteAllCompletedTaskDialogFragment()
                         findNavController().navigate(action)
                     }
                 }.exhaustive
@@ -129,7 +132,14 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
         inflater.inflate(R.menu.menu_fragment_tasks, menu)
 
         val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as SearchView
+
+        val pendingQuery = viewModel.searchQuery.value
+        if (pendingQuery != null && pendingQuery.isNotEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(pendingQuery, false)
+        }
+
 
         searchView.onQueryTextChanged {
 
@@ -180,5 +190,10 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
 
     override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
         viewModel.onTaskItemCheckChanged(task, isChecked)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchView.setOnQueryTextListener(null)
     }
 }
