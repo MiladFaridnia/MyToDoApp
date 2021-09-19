@@ -76,14 +76,18 @@ class TaskViewModel @ViewModelInject constructor(
     }
 
     fun onAddEditResult(result: Int) {
-        when(result){
+        when (result) {
             RESULT_ADD_OK -> showTaskConfirmationMessage("Task Added")
             RESULT_EDIT_OK -> showTaskConfirmationMessage("Task Updated")
         }
     }
 
-    private fun showTaskConfirmationMessage(message: String) =viewModelScope.launch {
+    private fun showTaskConfirmationMessage(message: String) = viewModelScope.launch {
         taskEventChannel.send(TaskEvent.ShowTaskSavedConfirmationMessage(message))
+    }
+
+    fun onDeleteAllCompletedClicked() = viewModelScope.launch {
+        taskEventChannel.send(TaskEvent.ShowDeleteAllCompletedScreen)
     }
 
     val tasks = taskFlow.asLiveData()
@@ -91,6 +95,7 @@ class TaskViewModel @ViewModelInject constructor(
 
     sealed class TaskEvent {
         object ShowAddTaskFragment : TaskEvent()
+        object ShowDeleteAllCompletedScreen : TaskEvent()
         data class ShowTaskSavedConfirmationMessage(val message: String) : TaskEvent()
         data class ShowEditTaskFragment(val task: Task) : TaskEvent()
         data class ShowUndoDeleteTaskMessage(val task: Task) : TaskEvent()
