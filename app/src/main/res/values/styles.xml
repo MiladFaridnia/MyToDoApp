@@ -3,6 +3,7 @@
 
     <style name="AppTheme" parent="Theme.MyToDoApp">
         <item name="android:actionOverflowButtonStyle">@style/MyActionButtonOverflow</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <!-- Style to replace actionbar overflow icon. set item 'android:actionOverflowButtonStyle' in AppTheme -->
@@ -11,6 +12,11 @@
         <item name="android:background">?android:attr/actionBarItemBackground</item>
         <item name="android:contentDescription">dots</item>
         <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
 </resources>

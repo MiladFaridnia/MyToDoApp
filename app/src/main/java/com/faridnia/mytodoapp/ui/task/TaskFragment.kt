@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -179,6 +180,22 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
                 viewModel.onDeleteAllCompletedClicked()
                 true
             }
+
+            R.id.action_change_theme -> {
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                    item.isChecked = true
+                }
+
+                item.isChecked = !item.isChecked
+
+                if (item.isChecked) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                return true
+            }
+
             else -> super.onOptionsItemSelected(item)
 
         }

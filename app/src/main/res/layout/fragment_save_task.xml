@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
     tools:context=".ui.addedit.AddEditTaskFragment">
 
     <LinearLayout
@@ -17,18 +19,22 @@
             android:layout_height="wrap_content"
             android:autofillHints="Enter Text"
             android:hint="@string/enter_text_hint"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textColor="?attr/colorOnSecondary" />
 
         <CheckBox
             android:id="@+id/taskCheckBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            android:buttonTint="?attr/colorOnSecondary"
             tools:text="Task Name" />
 
         <TextView
             android:id="@+id/createDateTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
             tools:text="Create Date: " />
 
     </LinearLayout>
@@ -40,6 +46,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_check" />
+        android:src="@drawable/ic_check"
+        app:backgroundTint="?attr/colorSecondaryVariant" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
