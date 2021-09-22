@@ -136,7 +136,7 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
         searchView = searchItem.actionView as SearchView
 
         val pendingQuery = viewModel.searchQuery.value
-        if (pendingQuery != null && pendingQuery.isNotEmpty()) {
+        if (pendingQuery.isNotEmpty()) {
             searchItem.expandActionView()
             searchView.setQuery(pendingQuery, false)
         }
@@ -152,6 +152,9 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
 
             menu.findItem(R.id.action_hide_completed).isChecked =
                 viewModel.preferencesFlow.first().hideCompleted
+
+            menu.findItem(R.id.action_change_theme).isChecked =
+                AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
 
         }
     }
@@ -182,9 +185,6 @@ class TaskFragment : Fragment(R.layout.fragment_task_list), TasksAdapter.OnTaskI
             }
 
             R.id.action_change_theme -> {
-                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                    item.isChecked = true
-                }
 
                 item.isChecked = !item.isChecked
 
